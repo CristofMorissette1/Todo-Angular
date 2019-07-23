@@ -82,5 +82,13 @@ export class TodoListComponent implements OnInit {
   atLeastOneCompleted(): boolean {
     return this.todos.filter(todo => todo.completed).length > 0;
   }
+
+  clearCompleted() {
+    this.todos = this.todos.filter(todo => !todo.completed)
+  }
+
+  checkAllTodos() {
+    this.todos.forEach(todo => todo.completed = (<HTMLInputElement>event.target).checked)
+  }
 }
 
