@@ -7,12 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TodoListComponent implements OnInit {
   todos: object[];
-  todoTitle: string
+  todoTitle: string;
+  idForTodo: number;
 
   constructor() { }
 
   ngOnInit() {
     this.todoTitle = '';
+    this.idForTodo = 4;
     this.todos = [{
       'id': 1,
       'title': 'Finish Angular Screencast',
@@ -32,5 +34,23 @@ export class TodoListComponent implements OnInit {
     'editing': false,
   }
   ];
+  }
+
+  addTodo() {
+    if (this.todoTitle.trim().length === 0) {
+      return;
+    }
+    this.todos.push({
+      id: this.idForTodo,
+      title: this.todoTitle,
+      completed: false,
+      editing: false,
+    })
+    this.todoTitle = '';
+    this.idForTodo++;
+  }
+
+  deleteTodo(id: number) {
+    this.todos = this.todos.filter(todo => todo.id !== id);
   }
 }
