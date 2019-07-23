@@ -3,8 +3,9 @@
 <input type="text" class="todo-input" placeholder="What needs to be done" [(ngModel)]='todoTitle' (keyup.enter)="addTodo()">
 <div class="todo-item" *ngFor="let todo of todos ">
     <div class="todo-item-left">
-        <input type="checkbox" v-model="todo.completed">
-        <div class="todo-item-label">{{todo.title}}</div>
+        <input type="checkbox" [(ngModel)]="todo.completed">
+        <div *ngIf='!todo.editing; else editingTodo' [ngClass]="{ 'completed' : todo.completed }" class="todo-item-label" (dblclick)='editTodo(todo)'>{{todo.title}}</div>
+        <input *ngIf='todo.editing' type='text' class='todo-item-edit' [(ngModel)]='todo.title' (blur)='doneEdit(todo)' (keyup.enter)='doneEdit(todo)' (keyup.esc)='cancelEdit(todo)' autofocus> 
     </div>
     <div class="remove-item" (click)="deleteTodo(todo.id)">
         &times;
@@ -12,8 +13,8 @@
 </div>
 
 <div class="extra-container">
-    <div><label><input type="checkbox">Check All</label></div>
-    <div>4 items left</div> 
+    <div><label><input (change)='checkAllTodos()' type="checkbox">Check All</label></div>
+    <div>{{remaining()}} items left</div> 
 </div>
 
 <div class="extra-container">
@@ -23,7 +24,7 @@
         <button>Completed</button>
     </div>
 
-    <div>
-        <button>Clear Completed</button>
+    <div *ngIf='atLeastOneCompleted()'>
+        <button (click)='clearCompleted()'>Clear Completed</button>
     </div>
 </div>

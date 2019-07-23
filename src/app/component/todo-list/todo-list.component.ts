@@ -10,10 +10,12 @@ export class TodoListComponent implements OnInit {
   todos: Todo[];
   todoTitle: string;
   idForTodo: number;
+  beforeEditCache: string;
 
   constructor() { }
 
   ngOnInit() {
+    this.beforeEditCache = '';
     this.todoTitle = '';
     this.idForTodo = 4;
     this.todos = [{
@@ -51,8 +53,42 @@ export class TodoListComponent implements OnInit {
     this.idForTodo++;
   }
 
+  doneEdit(todo: Todo) {
+    if (todo.title.trim().length === 0) {
+      todo.title = this.beforeEditCache;
+    }
+    todo.editing = false
+  }
+
+  cancelEdit(todo: Todo) {
+    todo.title = this.beforeEditCache;
+    todo.editing = false
+  }
+
+
+  editTodo(todo: Todo) {
+    this.beforeEditCache = todo.title;
+    todo.editing = true;
+  }
+
   deleteTodo(id: number) {
     this.todos = this.todos.filter(todo => todo.id !== id);
+  }
+
+  remaining(): number {
+    return this.todos.filter(todo => !todo.completed).length;
+  }
+
+  atLeastOneCompleted(): boolean {
+    return this.todos.filter(todo => todo.completed).length > 0;
+  }
+
+  clearCompleted() {
+    this.todos = this.todos.filter(todo => !todo.completed)
+  }
+
+  checkAllTodos() {
+    this.todos.forEach(todo => todo.completed = (<HTMLInputElement>event.target).checked)
   }
 }
 
